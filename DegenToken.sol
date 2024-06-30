@@ -7,7 +7,7 @@ interface IGameAsset {
     function safeMint(address to) external;
 }
 
-contract ERC20Token is ERC20 {
+contract DegenToken is ERC20 {
     address private organizer;
     uint256 private totalDonations;
     IGameAsset private gameAsset;
