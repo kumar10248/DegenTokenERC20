@@ -17,15 +17,12 @@ contract DegenToken is ERC20 {
     modifier onlyOrganizer() {
         require(
             msg.sender == organizer,
-            "Only the organizer can perform this action"
+            "Only the organizer can have access"
         );
         _;
     }
 
-    constructor(
-        uint256 initialSupply,
-        address gameAssetAddress
-    ) ERC20("FundraiserToken", "FRT") {
+    constructor(uint256 initialSupply, address gameAssetAddress) ERC20("FundraiserToken", "FRT") {
         _mint(msg.sender, initialSupply);
         organizer = msg.sender;
         gameAsset = IGameAsset(gameAssetAddress);
@@ -36,9 +33,13 @@ contract DegenToken is ERC20 {
         _mint(organizer, amount);
     }
 
+function checkingBalance() external view returns(uint){
+        return balanceOf(msg.sender);
+    }
+
     function donateTokens(address to, uint256 amount) public {
         require(to != address(0), "Cannot donate to the zero address");
-        require(amount > 0, "Donation amount must be greater than zero");
+        require(amount > 0, "You do not have enough amount!");
         require(
             balanceOf(msg.sender) >= amount,
             "Insufficient balance to donate"
