@@ -22,7 +22,10 @@ contract DegenToken is ERC20 {
         _;
     }
 
-    constructor(uint256 initialSupply, address gameAssetAddress) ERC20("FundraiserToken", "FRT") {
+    constructor(
+        uint256 initialSupply,
+        address gameAssetAddress
+    ) ERC20("FundraiserToken", "FRT") {
         _mint(msg.sender, initialSupply);
         organizer = msg.sender;
         gameAsset = IGameAsset(gameAssetAddress);
