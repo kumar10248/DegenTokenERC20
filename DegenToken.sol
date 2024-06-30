@@ -3,9 +3,14 @@ pragma solidity ^0.8.10;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
+interface IGameAsset {
+    function safeMint(address to) external;
+}
+
 contract ERC20Token is ERC20 {
     address private organizer;
     uint256 private totalDonations;
+    IGameAsset private gameAsset;
 
     mapping(address => uint256) private donations;
 
@@ -17,9 +22,10 @@ contract ERC20Token is ERC20 {
         _;
     }
 
-    constructor(uint256 initialSupply) ERC20("FundraiserToken", "FRT") {
+    constructor(uint256 initialSupply, address gameAssetAddress) ERC20("FundraiserToken", "FRT") {
         _mint(msg.sender, initialSupply);
         organizer = msg.sender;
+        gameAsset = IGameAsset(gameAssetAddress);
     }
 
     function mintTokens(uint256 amount) external onlyOrganizer {
@@ -49,13 +55,10 @@ contract ERC20Token is ERC20 {
 
         _burn(msg.sender, amount);
     }
-    
-    function redeemTokens(uint256 amount) public {
-        require(amount > 0, "Redeem amount must be greater than zero");
-        require(
-            balanceOf(msg.sender) >= amount,
-            "Insufficient balance to redeem"
-        ); 
-        _burn(msg.sender, amount);
+
+    function redeemTokens() external {
+        require(balanceOf(msg.sender) >= 1, "Insufficient balance to redeem");
+        _transfer(msg.sender, address(this), 1);
+        gameAsset.safeMint(msg.sender);
     }
 }
