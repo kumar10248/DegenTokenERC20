@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-
 interface IGameAsset {
     function safeMint(address to) external;
 }
